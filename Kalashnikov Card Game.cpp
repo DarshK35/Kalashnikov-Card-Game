@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <conio.h>
 #include "GameData.h"
 using namespace std;
@@ -60,7 +61,16 @@ void game() {
 
 }
 void instructions() {
+    system("cls");
+    fstream file;
+    char ch;
 
+    file.open("Instructions_screen.dat", ios::in);
+    while(!file.eof()) {
+        ch = file.get();
+        cout << ch;
+    }
+    _getch();
 }
 
 void player::start() {
