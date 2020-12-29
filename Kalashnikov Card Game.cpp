@@ -5,11 +5,14 @@
 using namespace std;
 
 card_deck deck;
-player p1;
+player p1, comp;
 
 char menu();
 void game();
 void instructions();
+
+void player_turn();
+void comp_turn();
 
 int main() {
     char e;
@@ -58,7 +61,26 @@ char menu() {
     return ch;
 }
 void game() {
+    do {
+        p1.start();
+        comp.start();
 
+        player_turn();
+        comp_turn();
+    } while(p1.ret_score() < 20 && comp.ret_score() < 20);
+
+    system("cls");
+    cout << "Game Over";
+
+    if(p1.ret_score() > comp.ret_score()) {
+        cout << "\n\nYou Win";
+    }
+    else {
+        cout << "\n\nYou Lose";
+    }
+
+    cout << "\n\nPress any key to return to menu";
+    _getch();
 }
 void instructions() {
     system("cls");
@@ -73,6 +95,20 @@ void instructions() {
     _getch();
 }
 
+void player_turn() {
+
+}
+void comp_turn() {
+
+}
+
+void card_deck::view_shelf() {
+
+}
+void card_deck::view_deck() {
+
+}
+
 void player::start() {
     for(int i = 0; i < 4; i++) {
         pick_card();
@@ -83,10 +119,19 @@ void player::pick_card() {
     card temp = deck.pick_from_deck();
     picked = temp;
 }
+void player::discard_card(int pos) {
+
+}
+void player::put_card_shelf(int pos) {
+
+}
 void player::view_hand() {
     for(int i = 0; i < 4; i++) {
         hand[i].disp();
     }
+}
+void player::view_picked() {
+
 }
 
 void card::disp() {

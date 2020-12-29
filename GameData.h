@@ -62,16 +62,18 @@ class player {
         player();
 
         void shuffle_hand();
+        int calc_damage(int);
+        void add_score(int);
+        int ret_score();
+
         void pick_card();
         card discard_card(int);
         card put_card_shelf(int);
-        int calc_damage(int);
 
         void start();
 
         void view_hand();
         void view_picked();
-        void view_score();
 };
 
 
@@ -173,6 +175,12 @@ int player::calc_damage(int pos) {
             return damage;
         }
     }
+}
+void player::add_score(int increase) {
+    score += increase;
+}
+int player::ret_score() {
+    return score;
 }
 
 void swap(card& a, card& b) {
