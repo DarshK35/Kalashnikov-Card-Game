@@ -61,12 +61,12 @@ char menu() {
     return ch;
 }
 void game() {
+    p1.start();
+    comp.start();
     do {
-        p1.start();
-        comp.start();
-
         player_turn();
         comp_turn();
+        break;
     } while(p1.ret_score() < 20 && comp.ret_score() < 20);
 
     system("cls");
@@ -96,7 +96,19 @@ void instructions() {
 }
 
 void player_turn() {
+    char ch;
+    system("cls");
+    cout << "\nYour hand:\n";
+    p1.view_hand();
 
+    cout << "\n" << 52 - deck.position << " cards in deck";
+
+    cout << "\n\nYour choices:";
+    if(p1.kalashnikov())
+        cout << "\nK -> KALASHNIKOV CYKA!";
+    if(52 - deck.position > 0)
+        cout << "\nD -> Pick card from deck";
+    //if(deck.shelf_cards)
 }
 void comp_turn() {
 
@@ -105,25 +117,43 @@ void comp_turn() {
 void card_deck::view_shelf() {
 
 }
-void card_deck::view_deck() {
-
+void card_deck::debug_view() {
+    for(int i = 0; i < 52; i++) {
+        cards[i].disp();
+    }
 }
 
 void player::start() {
     for(int i = 0; i < 4; i++) {
-        pick_card();
+        pick_card(-1);
         hand[i] = picked;
     }
 }
-void player::pick_card() {
-    card temp = deck.pick_from_deck();
-    picked = temp;
+void player::pick_card(int c) {
+    if(c == -1)
+        equate(deck.pick_from_deck());
+    else
+        equate(deck.pick_from_shelf(c));
 }
 void player::discard_card(int pos) {
-
+    switch(pos) {
+        case 4:
+            deck.put_to_garbage(picked);
+            break;
+        default:
+            deck.put_to_garbage(hand[pos]);
+            hand[pos] = picked;
+    }
 }
 void player::put_card_shelf(int pos) {
-
+    switch(pos) {
+        case 4:
+            deck.put_to_shelf(picked);
+            break;
+        default:
+            deck.put_to_shelf(hand[pos]);
+            hand[pos] = picked;
+    }
 }
 void player::view_hand() {
     for(int i = 0; i < 4; i++) {
@@ -131,7 +161,7 @@ void player::view_hand() {
     }
 }
 void player::view_picked() {
-
+    picked.disp();
 }
 
 void card::disp() {

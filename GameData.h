@@ -3,6 +3,7 @@
 #include <time.h>
 
 enum suits { SPADE = 0, HEART, CLUB, DIAMOND };
+const int kalashnikov_hand[] = {13, 7, 4, 1};
 
 struct card {
     int value, strength;
@@ -35,28 +36,30 @@ void swap(card&, card&);
 class card_deck {
     private:
         card cards[52], shelf[16], garbage[36];
-        int shelf_cards, garbage_cards, position;
 
         void init_cards();
         void shuffle();
 
     public:
         card_deck();
+        int shelf_cards, garbage_cards, position;
 
         card pick_from_deck();
         card pick_from_shelf(int);
         void put_to_shelf(card);
         void put_to_garbage(card);
 
+        void debug_view();
+
         void view_shelf();
         void view_garbage();
-        void view_deck();
 };
 
 class player {
     private:
         card hand[4], picked;
         int score;
+        void equate(card);
 
     public:
         player();
@@ -65,10 +68,11 @@ class player {
         int calc_damage(int);
         void add_score(int);
         int ret_score();
+        bool kalashnikov();
 
-        void pick_card();
-        card discard_card(int);
-        card put_card_shelf(int);
+        void pick_card(int);
+        void discard_card(int);
+        void put_card_shelf(int);
 
         void start();
 
@@ -182,6 +186,31 @@ void player::add_score(int increase) {
 int player::ret_score() {
     return score;
 }
+bool player::kalashnikov() {
+    card *copy = new card[4];
+    for(int i = 0; i < 4; i++) {
+        copy[i] = hand[i];
+    }
+
+    int max, pos;
+    for(int i = 0; i < 3; i++) {
+        max = copy[i].value;
+        pos = i;
+        for(int j = i + 1; j < 4; j++) {
+            if(copy[j].value > max) {
+                max = copy[j].value;
+                pos = j;
+            }
+        }
+        swap(copy[i], copy[pos]);
+    }
+
+    for(int i = 0; i < 4; i++) {
+        if(copy[i].value != kalashnikov_hand[i])
+            return false;
+    }
+    return true;
+}
 
 void swap(card& a, card& b) {
     card tem;
@@ -210,4 +239,7 @@ void card::get_strength() {
         default:
             strength = value - 1;
     }
+}
+void player::equate(card c) {
+    picked = c;
 }
