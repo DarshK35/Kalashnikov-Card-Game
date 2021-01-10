@@ -3,6 +3,7 @@
 Making a digital version of the Kalashnikov card game by Youtuber Life of Boris
 
 Changelog:
+
 V 0.0.3a:
   1. Put instructions screen text in a separate file to save on code lines.
   2. Updated game_data.h to add more functionality.
@@ -21,4 +22,6 @@ V 0.0.3a:
   1. Added debug functions for ease of error corrections.
   2. Updated instructions_screen.dat
 
-IMPORTANT NOTE: Curent build is not functional in terms of Game functions and AI opponent.
+
+
+<b>IMPORTANT NOTE: Curent build is not functional in terms of Game functions and AI opponent.</B>
