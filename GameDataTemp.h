@@ -129,6 +129,7 @@ void card::disp(bool mystery) {
 	}
 }
 
+
 //Card Deck Functions
 void cardDeck::initCards() {
 	for(int i = 0; i < 52; i++) {
@@ -169,7 +170,7 @@ void cardDeck::newGame() {
 	shelfCards = garbageCards = deckCards = 0;
 }
 
-card pickCard(int source, int pos) {
+card cardDeck::pickCard(int source, int pos = 0) {
 	/*
 		Source value key:
 		0: Deck
@@ -186,7 +187,7 @@ card pickCard(int source, int pos) {
 		return ret;
 	}
 }
-void putCard(int dest, card toPut) {
+void cardDeck::putCard(int dest, card toPut) {
 	/*
 		Dest key:
 		0: Garbage
@@ -202,13 +203,114 @@ void putCard(int dest, card toPut) {
 }
 
 void cardDeck::viwShelf() {
-
+	for(int i = 0; i < shelfCards; i++) {
+		shelf[i].disp(true);
+	}
 }
 void cardDeck::viewDeck() {
-
+	for(int i = deckCards; i < 52; i++) {
+		cards[i].disp(true);
+	}
 }
 void cardDeck::debugView() {
 	for(int i = 0; i < 52; i++) {
 		cards[i].disp(false);
 	}
+}
+
+
+//Player Functions
+player::player() {
+	score = 0;
+}
+void player::start() {
+	for(int i = 0; i < 4; i++) {
+		pickCard(0);
+		hand[i] = selected;
+	}
+}
+
+void player::shuffleHand() {
+	srand(time(NULL));
+	for(int i = 1; i < 4; i++) {
+		cardSwap(hand[i], hand[rand() % i]);
+	}
+}
+int player::calcDamage(int pos) {
+	card toCalc = hand[pos];
+
+	//Creating separate copy of hand
+	card *handCopy = new card[4];
+	for(int i = 0; i < 4; i++) {
+		handCopy[i] = hand[i];
+	}
+
+	//Sorting the hand copy according to card Strength
+	int max, p;
+	for(int i = 0; i < 3; i++) {
+		max = handCopy[i].strength;
+		p = i;
+		for(int j = i + 1; j < 4; j++) {
+			if(max < handCopy[j].strength) {
+				max = handCopy[j].strength;
+				p = j;
+			}
+			swap(handCopy[i], handCopy[p]);
+		}
+	}
+
+	//Calculating damage
+	int damage = 5;
+	for(int i = 0; i < 4; i++) {
+		if(hand[i - 1].strength != hand[i.strength] && i > 0) {
+			damage--;
+		}
+		if(hand[i] == toCalc) {
+			return damage;
+		}
+	}
+}
+void player::addScore(int increment) {
+	score += increment;
+}
+int player::retScore() {
+	return score;
+}
+bool player::kalashnikov() {
+	//Creating separate copy of hand
+	card *handCopy = new card[4];
+	for(int i = 0; i < 4; i++) {
+		handCopy[i] = hand[i];
+	}
+
+	//Sorting the hand copy according to card Strength
+	int max, p;
+	for(int i = 0; i < 3; i++) {
+		max = handCopy[i].strength;
+		p = i;
+		for(int j = i + 1; j < 4; j++) {
+			if(max < handCopy[j].strength) {
+				max = handCopy[j].strength;
+				p = j;
+			}
+			swap(handCopy[i], handCopy[p]);
+		}
+	}
+
+	//Checking Kalashnikov condition
+	for(int i = 0; i < 4; i++) {
+		if(copy[i].value != kalashnikovHand[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+void player::viewHand() {
+	for(int i = 0; i < 4: i++) {
+		hand[i].disp();
+	}
+}
+void player::viewSelected() {
+	selected.disp();
 }
