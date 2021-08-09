@@ -10,32 +10,32 @@ const int kalashnikovHand[] = {13, 7, 4, 1};
 struct card {
 	int value, strength;
 	int suit;
-	
+
 	void operator = (card& c);
 	bool operator == (card& c);
-	
+
 	void getStrength();
-	void disp();
+	void disp(bool);
 };
 
 class cardDeck {
 	private:
 		card cards[52], shelf[16], garbage[36];
-		
+
 		void initCards();
 		void shuffleDeck();
-	
+
 	public:
 		int shelfCards, garbageCards, deckCards;
-		
+
 		cardDeck();
 		void newGame();
-		
-		card pickCard(int);
+
+		card pickCard(int, int);
 		void putCard(int, card);
-		
+
 		void viewShelf();
-		void viewGarbage();
+		void viewDeck();
 		void debugView();
 };
 
@@ -43,20 +43,20 @@ class player {
 	private:
 		card hand[4], selected;
 		int score;
-		
+
 	public:
 		player();
 		void start();
-		
+
 		void shuffleHand();
 		int calcDamage(int);
 		void addScore(int);
 		int retScore();
 		bool kalashnikov();
-		
+
 		void pickCard(int);
 		card putCard(int);
-		
+
 		void viewHand();
 		void viewSelected();
 };
@@ -85,16 +85,20 @@ void card::getStrength() {
 		strength = value - 1;
 	}
 }
-void card::disp() {
+void card::disp(bool mystery) {
+	if(mystery) {
+		cout << "??\t??\n";
+		return;
+	}
 	switch(value) {
 		case 1:
 			cout << "A" << '\t';
 			break;
-		
+
 		case 13:
 			cout << "K" << '\t';
 			break;
-			
+
 		case 12:
 			cout << "Q" << '\t';
 			break;
@@ -109,19 +113,19 @@ void card::disp() {
 
 	switch(suit) {
 		case SPADE:
-			cout << "Spade" << "\t\n";
+			cout << "Spade" << "\n";
 			break;
 
 		case HEART:
-			cout << "Heart" << "\t\n";
+			cout << "Heart" << "\n";
 			break;
 
 		case CLUB:
-			cout << "Club" << "\t\n";
+			cout << "Club" << "\n";
 			break;
 
 		case DIAMOND:
-			cout << "Diamond" << "\t\n";
+			cout << "Diamond" << "\n";
 	}
 }
 
@@ -131,7 +135,7 @@ void cardDeck::initCards() {
 		cards[i].value = (i % 13) + 1;
 		cards[i].getStrength();
 	}
-	
+
 	int suit = SPADE;
 	for(int i = 1; i <= 52; i++) {
 		cards[i - 1].suit = suit;
@@ -139,17 +143,16 @@ void cardDeck::initCards() {
 			case 13:
 				suit = HEART;
 				break;
-				
+
 			case 26:
 				suit = CLUB;
 				break;
-				
+
 			case 39:
 				suit = DIAMOND;
 		}
 	}
 }
-
 void cardDeck::shuffleDeck() {
 	srand(time(NULL));
 	for(int i = 1; i < 52; i++) {
@@ -158,5 +161,54 @@ void cardDeck::shuffleDeck() {
 }
 
 cardDeck::cardDeck() {
-	
+	initCards();
+	newGame();
+}
+void cardDeck::newGame() {
+	shuffleDeck();
+	shelfCards = garbageCards = deckCards = 0;
+}
+
+card pickCard(int source, int pos) {
+	/*
+		Source value key:
+		0: Deck
+		1: Shelf
+	*/
+	if(source == 0) {
+		deckCards++;
+		return cards[deckCards - 1];
+	} else {
+		card ret = shelf[pos];
+		for(int i = 0; i < shelfCards - 1; i++) {
+			shelf[i] = shelf[i + 1];
+		}
+		return ret;
+	}
+}
+void putCard(int dest, card toPut) {
+	/*
+		Dest key:
+		0: Garbage
+		1: Shelf
+	*/
+	if(dest == 0) {
+		garbage[garbageCards] = toPut;
+		garbageCards++;
+	} else {
+		shelf[shelfCards] = toPut;
+		shelfCards++;
+	}
+}
+
+void cardDeck::viwShelf() {
+
+}
+void cardDeck::viewDeck() {
+
+}
+void cardDeck::debugView() {
+	for(int i = 0; i < 52; i++) {
+		cards[i].disp(false);
+	}
 }
