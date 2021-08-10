@@ -54,7 +54,7 @@ class player {
 		int retScore();
 		bool kalashnikov();
 
-		void pickCard(int);
+		void pickCard(int, int);
 		card putCard(int);
 
 		void viewHand();
@@ -193,12 +193,17 @@ void cardDeck::putCard(int dest, card toPut) {
 		0: Garbage
 		1: Shelf
 	*/
+	srand(time(NULL));
 	if(dest == 0) {
 		garbage[garbageCards] = toPut;
 		garbageCards++;
 	} else {
 		shelf[shelfCards] = toPut;
 		shelfCards++;
+
+		for(int i = 1; i < shelfCards; i++) {
+			cardSwap(shelf[i], shelf[rand() % i]);
+		}
 	}
 }
 
@@ -307,10 +312,17 @@ bool player::kalashnikov() {
 }
 
 void player::viewHand() {
-	for(int i = 0; i < 4: i++) {
+	for(int i = 0; i < 4; i++) {
 		hand[i].disp(false);
 	}
 }
 void player::viewSelected() {
 	selected.disp(false);
+}
+
+//Other Functions
+void cardSwap(card &a, card &b) {
+	card temp = a;
+	a = b;
+	b = temp;
 }
