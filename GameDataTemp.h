@@ -308,9 +308,9 @@ bool player::kalashnikov() {
 
 void player::viewHand() {
 	for(int i = 0; i < 4: i++) {
-		hand[i].disp();
+		hand[i].disp(false);
 	}
 }
 void player::viewSelected() {
-	selected.disp();
+	selected.disp(false);
 }
