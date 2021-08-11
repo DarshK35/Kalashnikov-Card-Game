@@ -133,7 +133,7 @@ void card_deck::debug_view() {
 
 void player::start() {
 	for(int i = 0; i < 4; i++) {
-		pick_card(-1);
+		pick_card(0);
 		hand[i] = picked;
 	}
 }
@@ -177,11 +177,11 @@ void card::disp() {
 		case 1:
 			cout << "A" << '\t';
 			break;
-		
+
 		case 13:
 			cout << "K" << '\t';
 			break;
-			
+
 		case 12:
 			cout << "Q" << '\t';
 			break;
