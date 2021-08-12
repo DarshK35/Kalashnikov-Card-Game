@@ -47,6 +47,7 @@ class player {
 	public:
 		player();
 		void start();
+		void afterKalashnikovStart();
 
 		void shuffleHand();
 		int calcDamage(int);
@@ -59,6 +60,16 @@ class player {
 
 		void viewHand();
 		void viewSelected();
+};
+
+struct availableActivities {
+	//First menu perms
+	bool pickFromDeck, pickFromShelf, kalashnikov;
+	//Picked card perms
+	bool putToShelf, putToGarbage;
+
+	void checkPreChoice(cardDeck, player);
+	void checkPostChoice(cardDeck, player);
 };
 
 void cardSwap(card &a, card &b);
@@ -233,6 +244,7 @@ void player::start() {
 		pickCard(0);
 		hand[i] = selected;
 	}
+	selected = new card;
 }
 
 void player::shuffleHand() {
@@ -312,6 +324,7 @@ bool player::kalashnikov() {
 }
 
 void player::viewHand() {
+	cout << "Hand:\n";
 	for(int i = 0; i < 4; i++) {
 		hand[i].disp(false);
 	}

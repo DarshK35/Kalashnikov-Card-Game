@@ -1,10 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <conio.h>
+#include "GameDataTemp.h"
 using namespace std;
 
 cardDeck deck;
 player p1, cpu;
+availableActivities perms;
 
 char menu();
 void game();
@@ -40,7 +42,7 @@ char menu() {
 
 		case 'e':
 			cout << "\n\nAre you sure? (Y / N)";
-			sure_exit:
+			exitMainMenu:
 			e = _getch();
 
 			switch(e) {
@@ -52,14 +54,104 @@ char menu() {
 					break;
 
 				default:
-					goto sure_exit;
+					goto exitMainMenu;
 			}
 	}
 	return ch;
 }
 //Still to be defined and implemented
 void game() {
+    deck.newGame();
+    p1.start();
+    cpu.start();
 
+    int p1Score, cpuScore;
+    bool gameOver = false;
+
+    while(!gameOver) {
+        char playerChoice;
+        p1Score = p1.retScore();
+        cpuScore = cpu.retScore();
+
+        system("cls");
+        //Display score, player hand and other info
+        cout << "Your score: " << p1Score;
+        cout << "\nCPU score" << cpuScore;
+        cout << "\n\nYour hand:\n";
+        p1.viewHand();
+
+        cout << "Remaining Deck Cards: " << 53 - deck.deckCards;
+        cout << "Remaining Shelf Cards: " << deck.shelfCards;
+
+        perms.checkPreChoice(deck, p1);
+        cout << "Available options:\n";
+        if(perms.pickFromDeck) {
+            cout << "D -> Pick from Deck";
+        }
+        if(perms.pickFromShelf) {
+            cout << "S -> Pick from Shelf";
+        }
+        if(perms.kalashnikov) {
+            cout << "K -> Kalashnikov cyka!";
+        }
+        playerFirstChoice:
+        playerChoice = _getch();
+
+        switch(playerChoice) {
+            case 'd':
+                if(perms.pickFromDeck) {
+                    player.pickCard(0);
+                    cout << "Card Picked from Deck";
+                    break;
+                } else {
+                    goto playerFirstChoice;
+                }
+
+            case 's':
+                if(perms.pickFromShelf) {
+                    int pos;
+                    cout << "\n\nShelf:\t" << deck.shelfCards << " cards\n";
+
+                    shelfCardPosTell:
+                    cout << "\nSpecify position to take card from: ";
+                    cin >> pos;
+                    if(pos < deck.shelfCards) {
+                        player.pickCard(1, pos);
+                        cout << "Card Picked from Shelf";
+                    } else {
+                        cout << "Invalid value, try again";
+                        goto shelfCardsPosTell;
+                    }
+                } else {
+                    goto playerFirstChoice;
+                }
+
+            case 'k':
+                if(perms.kalashnikov) {
+                    //Still have to add this gameplay scene
+
+                    deck.newGame();
+                    p1.afterKalashnikovStart();
+                    cpu.afterKalashnikovStart();
+                    if(p1Score >= 20) {
+                        gameOver = true;
+                    }
+                    continue;
+                } else {
+                    goto playerFirstChoice;
+                }
+
+            default:
+                goto playerFirstChoice;
+        }
+
+        cout << "\nPicked Card:\n";
+        p1.viewSelected();
+
+        perms.checkpostChoice(deck, p1);
+        cout << "Available Options:\n";
+        
+    }
 }
 void instructions() {
     system("cls");
