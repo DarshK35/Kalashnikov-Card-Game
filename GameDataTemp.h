@@ -56,7 +56,8 @@ class player {
 		bool kalashnikov();
 
 		void pickCard(int, int);
-		card putCard(int);
+		void putCard(int, int);
+		void swapWithHand(int);
 
 		void viewHand();
 		void viewSelected();
@@ -279,7 +280,7 @@ int player::calcDamage(int pos) {
 	//Calculating damage
 	int damage = 5;
 	for(int i = 0; i < 4; i++) {
-		if(hand[i - 1].strength != hand[i.strength] && i > 0) {
+		if(handCopy[i - 1].strength != handCopy[i].strength && i > 0) {
 			damage--;
 		}
 		if(hand[i] == toCalc) {
@@ -323,8 +324,11 @@ bool player::kalashnikov() {
 	return true;
 }
 
+void player::swapWithHand(int pos) {
+	cardSwap(selected, hand[pos - 1]);
+}
+
 void player::viewHand() {
-	cout << "Hand:\n";
 	for(int i = 0; i < 4; i++) {
 		hand[i].disp(false);
 	}
